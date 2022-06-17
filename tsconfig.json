@@ -3,6 +3,8 @@
     "module": "commonjs",
     "target": "es6",
     "noImplicitAny": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "strict": true,
     "sourceMap": true,
     "outDir": "./dist",
