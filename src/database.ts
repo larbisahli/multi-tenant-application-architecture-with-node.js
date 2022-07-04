@@ -1,5 +1,5 @@
 import { Pool, PoolClient } from 'pg';
-import type { TenantType } from '../interfaces/index';
+import type { TenantType } from './interfaces';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -46,15 +46,6 @@ export default class PostgresClient {
       'SELECT id, store_name, fullname, email, status FROM tenants WHERE store_name = $1',
       [store_name]
     );
-
-    // // ---------- REST ------------
-    // const { rows: current_tenant_name } = await client.query(
-    //   `SELECT current_setting('app.current_tenant_name');`,
-    //   []
-    // );
-
-    // console.log('Transaction.current_tenant ==>', {tenantRow, current_tenant_name});
-    // // ----------------------------
 
     if (tenantRow?.length > 0) {
       const current_tenant = tenantRow[0];

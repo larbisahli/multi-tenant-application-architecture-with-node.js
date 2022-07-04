@@ -3,6 +3,7 @@ declare module 'pg' {
     tenant?: TenantType | null;
   }
 }
+
 export interface TenantType {
   id: string;
   store_name: string;
