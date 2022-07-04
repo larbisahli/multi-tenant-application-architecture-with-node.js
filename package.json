@@ -1,14 +1,15 @@
 {
   "name": "multi-tenant-application-architecture-with-nodejs",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/server.js",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
-    "start": "node ./dist/server.ts",
+    "start": "node dist/server.ts",
     "watch": "tsc --watch",
-    "nodemon": "nodemon ./dist/server.js",
-    "dev": "concurrently \"yarn:watch\"  \"yarn:nodemon\""
+    "nodemon": "nodemon dist/server.js",
+    "dev": "concurrently \"yarn:watch\"  \"yarn:nodemon\"",
+    "prettier": "prettier --write \"**/*.{ts,json,yml}\""
   },
   "dependencies": {
     "concurrently": "^7.2.2",
@@ -21,6 +22,7 @@
     "@types/express": "^4.17.13",
     "@types/node": "^18.0.0",
     "@types/pg": "^8.6.5",
+    "prettier": "^2.7.1",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.3"
   }

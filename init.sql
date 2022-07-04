@@ -1,13 +1,14 @@
+-- EXTENSIONS --
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE IF NOT EXISTS store_names (
-  store_name VARCHAR(63) NOT NULL,
-  PRIMARY KEY (store_name)
-);
+-- SEQUENCES --
+CREATE SEQUENCE IF NOT EXISTS products_seq;
+
+--- TABLES ---
 
 CREATE TABLE IF NOT EXISTS tenants (
   id UUID NOT NULL DEFAULT uuid_generate_v4(),
-  store_name VARCHAR(63) REFERENCES store_names(store_name) ON DELETE SET NULL,
+  store_name VARCHAR(63) NOT NULL UNIQUE,
   fullname VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
   status VARCHAR(64) CHECK (status IN ('active', 'suspended', 'disabled')) NOT NULL,
@@ -15,12 +16,8 @@ CREATE TABLE IF NOT EXISTS tenants (
   PRIMARY KEY (id)
 );
 
-ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
-CREATE POLICY tenant_isolation_policy ON tenants 
-USING (store_name = current_setting('app.current_tenant_name')::VARCHAR(63));
-
 CREATE TABLE IF NOT EXISTS products (
-  id UUID NOT NULL DEFAULT uuid_generate_v4(),
+  id INT NOT NULL DEFAULT NEXTVAL ('products_seq'),
   tenant_id UUID REFERENCES tenants(id) ON DELETE SET NULL,
   product_name VARCHAR(255) NOT NULL,
   sale_price NUMERIC DEFAULT 0,
@@ -33,11 +30,19 @@ CREATE TABLE IF NOT EXISTS products (
   PRIMARY KEY (id)
 );
 
+-- RLS POLICIES -- 
+ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenant_isolation_policy ON tenants 
+USING (store_name = current_setting('app.current_tenant_name')::VARCHAR(63));
+
 ALTER TABLE products ENABLE ROW LEVEL SECURITY;
 CREATE POLICY product_isolation_policy ON products 
 USING (tenant_id = current_setting('app.current_tenant_id')::UUID);
 
--- Create a crud user
+-- INDEXES --
+CREATE INDEX idx_tenant_id ON products (tenant_id);
+
+-- Permissions --
 CREATE USER crud_user WITH PASSWORD 'crud_password';
 -- Allow crud user to connect to the development databaase
 GRANT CONNECT ON DATABASE development TO crud_user;
