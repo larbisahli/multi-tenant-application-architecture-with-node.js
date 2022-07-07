@@ -1,6 +1,6 @@
-<img src="diagram.drawio.png" width="80%"/>
+<p align="center"><img src="diagram.drawio.png" width="80%"/></p>
 
-We will also be using a Table-based multi-tenancy model that saves the most on
+In this project we will be using a Table-based multi-tenancy model that saves the most on
 operational costs, sharing a database between tenants uses hardware efficiently
 and reduces your infrastructure code and maintenance overhead.
 
